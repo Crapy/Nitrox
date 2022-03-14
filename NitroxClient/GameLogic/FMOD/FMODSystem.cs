@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Properties;
@@ -45,25 +45,36 @@ namespace NitroxClient.GameLogic.FMOD
 
         public static FMODSuppressor SuppressSounds()
         {
-            return new();
+            return new FMODSuppressor();
         }
 
         public bool IsWhitelisted(string path)
         {
-            return assetWhitelist.TryGetValue(path, out SoundData soundData) && soundData.IsWhitelisted;
+            return TryGetSoundData(path, out SoundData soundData) && soundData.IsWhitelisted;
         }
 
         public bool IsWhitelisted(string path, out bool isGlobal, out float radius)
         {
-            bool hasEntry = assetWhitelist.TryGetValue(path, out SoundData soundData);
-            if (hasEntry)
+            if (TryGetSoundData(path, out SoundData soundData))
             {
                 isGlobal = soundData.IsGlobal;
                 radius = soundData.SoundRadius;
                 return soundData.IsWhitelisted;
             }
+
             isGlobal = false;
             radius = -1f;
+            return false;
+        }
+
+        public bool TryGetSoundData(string path, out SoundData soundData)
+        {
+            if (assetWhitelist.TryGetValue(path, out SoundData value))
+            {
+                soundData = value;
+                return true;
+            }
+            soundData = new SoundData();
             return false;
         }
 
