@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Properties;
@@ -96,6 +96,11 @@ namespace NitroxClient.GameLogic.FMOD
         public void PlayStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
         {
             packetSender.Send(new PlayFMODStudioEmitter(id, assetPath, play, allowFadeout));
+        }
+
+        public void PlayEventInstance(NitroxId id, string assetPath, bool play, NitroxVector3 position, float volume, float radius, bool isGlobal)
+        {
+            packetSender.Send(new PlayFMODEventInstance(id, assetPath, play, position, volume, radius, isGlobal));
         }
 
         public Dictionary<string, SoundData> SoundDataList => assetWhitelist;
