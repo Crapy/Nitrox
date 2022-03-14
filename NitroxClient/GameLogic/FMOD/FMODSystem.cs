@@ -80,27 +80,27 @@ namespace NitroxClient.GameLogic.FMOD
 
         public void PlayAsset(string path, NitroxVector3 position, float volume, float radius, bool isGlobal)
         {
-            packetSender.Send(new PlayFMODAsset(path, position, volume, radius, isGlobal));
+            packetSender.Send(new FMODAssetPacket(path, position, volume, radius, isGlobal));
         }
 
         public void PlayCustomEmitter(NitroxId id, string assetPath, bool play)
         {
-            packetSender.Send(new PlayFMODCustomEmitter(id, assetPath, play));
+            packetSender.Send(new FMODCustomEmitterPacket(id, assetPath, play));
         }
 
         public void PlayCustomLoopingEmitter(NitroxId id, string assetPath)
         {
-            packetSender.Send(new PlayFMODCustomLoopingEmitter(id, assetPath));
+            packetSender.Send(new FMODCustomLoopingEmitterPacket(id, assetPath));
         }
 
         public void PlayStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
         {
-            packetSender.Send(new PlayFMODStudioEmitter(id, assetPath, play, allowFadeout));
+            packetSender.Send(new FMODStudioEmitterPacket(id, assetPath, play, allowFadeout));
         }
 
         public void PlayEventInstance(NitroxId id, string assetPath, bool play, NitroxVector3 position, float volume, float radius, bool isGlobal)
         {
-            packetSender.Send(new PlayFMODEventInstance(id, assetPath, play, position, volume, radius, isGlobal));
+            packetSender.Send(new FMODEventInstancePacket(id, assetPath, play, position, volume, radius, isGlobal));
         }
 
         public Dictionary<string, SoundData> SoundDataList => assetWhitelist;

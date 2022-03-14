@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayFMODCustomLoopingEmitterProcessor : ClientPacketProcessor<PlayFMODCustomLoopingEmitter>
+public class FMODCustomLoopingEmitterProcessor : ClientPacketProcessor<FMODCustomLoopingEmitterPacket>
 {
-    public override void Process(PlayFMODCustomLoopingEmitter packet)
+    public override void Process(FMODCustomLoopingEmitterPacket packet)
     {
         GameObject soundSource = NitroxEntity.RequireObjectFrom(packet.Id);
         FMODEmitterController fmodEmitterController = soundSource.RequireComponent<FMODEmitterController>();

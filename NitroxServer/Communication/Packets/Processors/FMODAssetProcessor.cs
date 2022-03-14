@@ -6,16 +6,16 @@ using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors;
 
-public class PlayFMODEventInstanceProcessor : AuthenticatedPacketProcessor<PlayFMODEventInstance>
+public class FMODAssetProcessor : AuthenticatedPacketProcessor<FMODAssetPacket>
 {
     private readonly PlayerManager playerManager;
 
-    public PlayFMODEventInstanceProcessor(PlayerManager playerManager)
+    public FMODAssetProcessor(PlayerManager playerManager)
     {
         this.playerManager = playerManager;
     }
 
-    public override void Process(PlayFMODEventInstance packet, Player sendingPlayer)
+    public override void Process(FMODAssetPacket packet, Player sendingPlayer)
     {
         foreach (Player player in playerManager.GetConnectedPlayers())
         {

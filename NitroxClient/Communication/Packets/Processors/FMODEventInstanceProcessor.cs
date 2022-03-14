@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayFMODEventInstanceProcessor : ClientPacketProcessor<PlayFMODEventInstance>
+public class FMODEventInstanceProcessor : ClientPacketProcessor<FMODEventInstancePacket>
 {
-    public override void Process(PlayFMODEventInstance packet)
+    public override void Process(FMODEventInstancePacket packet)
     {
         Optional<GameObject> soundSource = NitroxEntity.GetObjectFrom(packet.Id);
         Validate.IsPresent(soundSource);

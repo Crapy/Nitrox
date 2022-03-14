@@ -9,9 +9,9 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class PlayFMODAssetProcessor : ClientPacketProcessor<PlayFMODAsset>
+    public class FMODAssetProcessor : ClientPacketProcessor<FMODAssetPacket>
     {
-        public override void Process(PlayFMODAsset packet)
+        public override void Process(FMODAssetPacket packet)
         {
             EventInstance instance = FMODUWE.GetEvent(packet.AssetPath);
             instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);

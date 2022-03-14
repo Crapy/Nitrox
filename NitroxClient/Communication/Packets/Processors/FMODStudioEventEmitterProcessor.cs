@@ -7,31 +7,30 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayFMODCustomEmitterProcessor : ClientPacketProcessor<PlayFMODCustomEmitter>
+public class FMODStudioEventEmitterProcessor : ClientPacketProcessor<FMODStudioEmitterPacket>
 {
     private readonly IPacketSender packetSender;
 
-    public PlayFMODCustomEmitterProcessor(IPacketSender packetSender)
+    public FMODStudioEventEmitterProcessor(IPacketSender packetSender)
     {
         this.packetSender = packetSender;
     }
 
 
-    public override void Process(PlayFMODCustomEmitter packet)
+    public override void Process(FMODStudioEmitterPacket packet)
     {
         GameObject soundSource = NitroxEntity.RequireObjectFrom(packet.Id);
         FMODEmitterController fmodEmitterController = soundSource.RequireComponent<FMODEmitterController>();
 
-        using (packetSender.Suppress<PlayFMODCustomEmitter>())
-        using (packetSender.Suppress<PlayFMODCustomLoopingEmitter>())
+        using (packetSender.Suppress<FMODStudioEmitterPacket>())
         {
             if (packet.Play)
             {
-                fmodEmitterController.PlayCustomEmitter(packet.AssetPath);
+                fmodEmitterController.PlayStudioEmitter(packet.AssetPath);
             }
             else
             {
-                fmodEmitterController.StopCustomEmitter(packet.AssetPath);
+                fmodEmitterController.StopStudioEmitter(packet.AssetPath, packet.AllowFadeout);
             }
         }
     }
