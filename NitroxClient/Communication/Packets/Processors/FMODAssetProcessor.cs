@@ -1,27 +1,35 @@
 ﻿using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxModel.GameLogic.FMOD;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using UnityEngine;
 
 #pragma warning disable 618
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class FMODAssetProcessor : ClientPacketProcessor<FMODAssetPacket>
 {
-    public class FMODAssetProcessor : ClientPacketProcessor<FMODAssetPacket>
+    private readonly FMODWhitelist fmodWhitelist;
+    public FMODAssetProcessor(FMODWhitelist fmodWhitelist)
     {
-        public override void Process(FMODAssetPacket packet)
+        this.fmodWhitelist = fmodWhitelist;
+    }
+    public override void Process(FMODAssetPacket packet)
+    {
+        if (!fmodWhitelist.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
-            EventInstance instance = FMODUWE.GetEvent(packet.AssetPath);
-            instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-            instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, packet.Radius);
-            // Volume is a scalar, is should be limited to 0 and we don't need more than 100% volume (i.e. 1.0).
-            // See docs: https://fmod.com/resources/documentation-api?version=2.00&page=studio-api-eventinstance.html#studio_eventinstance_setvolume
-            instance.setVolume(Mathf.Clamp01(packet.Volume));
-            instance.set3DAttributes(packet.Position.ToUnity().To3DAttributes());
-            instance.start();
-            instance.release();
+            Log.Error($"[FMODAssetProcessor] Whitelist has no item for {packet.AssetPath}.");
         }
+
+        EventInstance instance = FMODUWE.GetEvent(packet.AssetPath);
+        instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+        instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, soundData.Radius);
+        instance.setVolume(packet.Volume);
+        instance.set3DAttributes(packet.Position.ToUnity().To3DAttributes());
+        instance.start();
+        instance.release();
     }
 }

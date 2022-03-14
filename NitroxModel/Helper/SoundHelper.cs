@@ -9,7 +9,7 @@ public static class SoundHelper
     {
         if (0f <= distance && distance < radius)
         {
-            return (1f - distance / radius) * volume;
+            return Mathf.Clamp01((1f - distance / radius) * volume);
         }
         return 0f;
     }

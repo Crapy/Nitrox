@@ -10,7 +10,7 @@ public class FMODEventInstancePacket : FMODAssetPacket
     public NitroxId Id { get; }
     public bool Play { get; }
 
-    public FMODEventInstancePacket(NitroxId id, string assetPath, bool play, NitroxVector3 position, float volume, float radius, bool isGlobal) : base(assetPath, position, volume, radius, isGlobal)
+    public FMODEventInstancePacket(NitroxId id, bool play, string assetPath, NitroxVector3 position, float volume) : base(assetPath, position, volume)
     {
         Id = id;
         Play = play;
