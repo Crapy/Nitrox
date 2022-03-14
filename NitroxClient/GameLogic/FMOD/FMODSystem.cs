@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System;
+using NitroxClient.Communication.Abstract;
 using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
@@ -9,6 +10,11 @@ namespace NitroxClient.GameLogic.FMOD;
 
 public class FMODSystem : FMODWhitelist
 {
+    public static readonly Type[] FMODPacketTypes = {
+        typeof(FMODAssetPacket), typeof(FMODCustomEmitterPacket), typeof(FMODCustomLoopingEmitterPacket),
+        typeof(FMODEventInstancePacket), typeof(FMODStudioEmitterPacket)
+    };
+
     private readonly IPacketSender packetSender;
 
     public FMODSystem(IPacketSender packetSender) : base(GameInfo.Subnautica.Name)
@@ -16,7 +22,10 @@ public class FMODSystem : FMODWhitelist
         this.packetSender = packetSender;
     }
 
-    public static FMODSuppressor SuppressSounds()
+    /// <summary>
+    /// Suppresses sounds played by base Subnautica, not any sounds triggered by Nitrox
+    /// </summary>
+    public static FMODSuppressor SuppressSubnauticaSounds()
     {
         return new FMODSuppressor();
     }

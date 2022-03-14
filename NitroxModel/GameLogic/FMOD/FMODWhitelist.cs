@@ -9,7 +9,7 @@ namespace NitroxModel.GameLogic.FMOD;
 public class FMODWhitelist
 {
     private readonly HashSet<string> whitelistedPaths = new();
-    internal readonly Dictionary<string, SoundData> soundsWhitelist = new();
+    private readonly Dictionary<string, SoundData> soundsWhitelist = new();
 
     public FMODWhitelist(string gameName)
     {
@@ -78,7 +78,7 @@ public class FMODWhitelist
         return false;
     }
 
-    public ReadOnlyDictionary<string, SoundData> GetWhitelist => new ReadOnlyDictionary<string, SoundData>(soundsWhitelist);
+    public ReadOnlyDictionary<string, SoundData> GetWhitelist => new(soundsWhitelist);
 }
 
 public readonly struct SoundData

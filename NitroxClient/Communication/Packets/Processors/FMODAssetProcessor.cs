@@ -2,7 +2,6 @@
 using FMODUnity;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 
