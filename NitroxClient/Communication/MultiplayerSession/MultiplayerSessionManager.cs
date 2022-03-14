@@ -126,6 +126,11 @@ namespace NitroxClient.Communication.MultiplayerSession
             return new PacketSuppressor<T>(suppressedPacketsTypes);
         }
 
+        public PacketSuppressor SuppressRange(Type[] packetsToSuppress)
+        {
+            return new PacketSuppressor(suppressedPacketsTypes, packetsToSuppress);
+        }
+
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
         {
             Validate.NotNull(sessionConnectionState);
