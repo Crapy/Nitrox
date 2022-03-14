@@ -11,8 +11,8 @@ namespace NitroxClient.GameLogic.FMOD;
 public class FMODSystem : FMODWhitelist
 {
     public static readonly Type[] FMODPacketTypes = {
-        typeof(FMODAssetPacket), typeof(FMODCustomEmitterPacket), typeof(FMODCustomLoopingEmitterPacket),
-        typeof(FMODEventInstancePacket), typeof(FMODStudioEmitterPacket)
+        typeof(FMODAssetPacket), typeof(FMODEventInstancePacket), typeof(FMODCustomEmitterPacket), typeof(FMODCustomLoopingEmitterPacket),
+        typeof(FMODStudioEmitterPacket)
     };
 
     private readonly IPacketSender packetSender;
