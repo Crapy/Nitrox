@@ -88,7 +88,6 @@ namespace NitroxClient.MonoBehaviours
             loopingEmitter.timeLastStopSound = Time.time;
         }
 
-
         public void PlayEventInstance(string path, float volume)
         {
             EventInstance eventInstance = eventInstances[path];

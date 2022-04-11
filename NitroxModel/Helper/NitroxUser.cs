@@ -24,6 +24,16 @@ namespace NitroxModel.Helper
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
                 return null;
+            },
+            () =>
+            {
+                string currentAsmFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location) ?? string.Empty;
+                if (File.Exists(Path.Combine(currentAsmFolder, "NitroxLauncher.exe")) ||
+                    Directory.Exists(Path.Combine(currentAsmFolder, "LanguageFiles")))
+                {
+                    return currentAsmFolder;
+                }
+                return null;
             }
         };
 
@@ -48,6 +58,7 @@ namespace NitroxModel.Helper
                     }
                 }
 
+                Log.Error("Failed to get launcher path with provided methods.");
                 return null;
             }
         }
