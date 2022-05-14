@@ -5,29 +5,31 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.ToggleLights>
 {
-    class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.ToggleLights>
+    private readonly IPacketSender packetSender;
+
+    public ToggleLightsProcessor(IPacketSender packetSender)
     {
-        private readonly IPacketSender packetSender;
+        this.packetSender = packetSender;
+    }
 
-        public ToggleLightsProcessor(IPacketSender packetSender)
+    public override void Process(NitroxModel.Packets.ToggleLights packet)
+    {
+        GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+        ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
+        if (!toggleLights)
         {
-            this.packetSender = packetSender;
+            toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
         }
-        public override void Process(NitroxModel.Packets.ToggleLights packet)
-        {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
-            if (!toggleLights)
-            {
-                toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
-            }
 
-            if (packet.IsOn != toggleLights.GetLightsActive())
+        if (packet.IsOn != toggleLights.GetLightsActive())
+        {
+            using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
             {
-                using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
-                using (FMODSystem.SuppressSubnauticaSounds())
+                using (packetSender.SuppressRange(FMODSystem.FMODPacketTypes))
                 {
                     toggleLights.SetLightsActive(packet.IsOn);
                 }
