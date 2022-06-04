@@ -42,7 +42,7 @@ public class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, IDynamicPatch
 
     public override void Patch(Harmony harmony)
     {
-        fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
+        fmodSystem = Resolve<FMODSystem>();
         PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
     }
 
