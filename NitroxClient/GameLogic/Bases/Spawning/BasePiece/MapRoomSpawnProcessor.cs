@@ -40,7 +40,6 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
                     return child.gameObject;
                 }
             }
-
             throw new ArgumentException($"Unable to locate recently built map room with {latestBase}");
         }
     }
