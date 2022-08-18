@@ -1,92 +1,57 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Properties;
+using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 
-namespace NitroxClient.GameLogic.FMOD
+namespace NitroxClient.GameLogic.FMOD;
+
+public class FMODSystem : FMODWhitelist
 {
-    public class FMODSystem
+    public static readonly Type[] FMODPacketTypes = {
+        typeof(FMODAssetPacket), typeof(FMODEventInstancePacket), typeof(FMODCustomEmitterPacket), typeof(FMODCustomLoopingEmitterPacket),
+        typeof(FMODStudioEmitterPacket)
+    };
+
+    private readonly IPacketSender packetSender;
+
+    public FMODSystem(IPacketSender packetSender) : base(GameInfo.Subnautica.Name)
     {
-        private readonly Dictionary<string, SoundData> assetWhitelist = new();
-        private readonly IPacketSender packetSender;
+        this.packetSender = packetSender;
+    }
 
-        public FMODSystem(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-            string soundsWhitelist = Resources.soundsWhitelist;
-            if (string.IsNullOrWhiteSpace(soundsWhitelist))
-            {
-                Log.Error("[FMODSystem]: soundsWhitelist.csv is null or whitespace");
-            }
+    /// <summary>
+    /// Suppresses sounds played by base Subnautica, not any sounds triggered by Nitrox
+    /// </summary>
+    public static FMODSuppressor SuppressSubnauticaSounds()
+    {
+        return new FMODSuppressor();
+    }
 
-            foreach (string entry in soundsWhitelist.Split('\n'))
-            {
-                if (string.IsNullOrWhiteSpace(entry) || entry.StartsWith("#") || entry.StartsWith(";"))
-                {
-                    continue;
-                }
+    public void PlayAsset(string path, NitroxVector3 position, float volume)
+    {
+        packetSender.Send(new FMODAssetPacket(path, position, volume));
+    }
 
-                string[] keyValuePair = entry.Split(';');
-                if (bool.TryParse(keyValuePair[1], out bool isWhitelisted) &&
-                    bool.TryParse(keyValuePair[2], out bool isGlobal) &&
-                    float.TryParse(keyValuePair[3], NumberStyles.Any, CultureInfo.InvariantCulture, out float soundRadius))
-                {
-                    assetWhitelist.Add(keyValuePair[0], new SoundData(isWhitelisted, isGlobal, soundRadius));
-                }
-                else
-                {
-                    Log.Error($"[FMODSystem]: Error while parsing soundsWhitelist.csv: {entry}");
-                }
-            }
-        }
+    public void PlayCustomEmitter(NitroxId id, string assetPath, bool play)
+    {
+        packetSender.Send(new FMODCustomEmitterPacket(id, assetPath, play));
+    }
 
-        public static FMODSuppressor SuppressSounds()
-        {
-            return new();
-        }
+    public void PlayCustomLoopingEmitter(NitroxId id, string assetPath)
+    {
+        packetSender.Send(new FMODCustomLoopingEmitterPacket(id, assetPath));
+    }
 
-        public bool IsWhitelisted(string path)
-        {
-            return assetWhitelist.TryGetValue(path, out SoundData soundData) && soundData.IsWhitelisted;
-        }
+    public void PlayStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
+    {
+        packetSender.Send(new FMODStudioEmitterPacket(id, assetPath, play, allowFadeout));
+    }
 
-        public bool IsWhitelisted(string path, out bool isGlobal, out float radius)
-        {
-            bool hasEntry = assetWhitelist.TryGetValue(path, out SoundData soundData);
-            if (hasEntry)
-            {
-                isGlobal = soundData.IsGlobal;
-                radius = soundData.SoundRadius;
-                return soundData.IsWhitelisted;
-            }
-            isGlobal = false;
-            radius = -1f;
-            return false;
-        }
-
-        public void PlayAsset(string path, NitroxVector3 position, float volume, float radius, bool isGlobal)
-        {
-            packetSender.Send(new PlayFMODAsset(path, position, volume, radius, isGlobal));
-        }
-
-        public void PlayCustomEmitter(NitroxId id, string assetPath, bool play)
-        {
-            packetSender.Send(new PlayFMODCustomEmitter(id, assetPath, play));
-        }
-
-        public void PlayCustomLoopingEmitter(NitroxId id, string assetPath)
-        {
-            packetSender.Send(new PlayFMODCustomLoopingEmitter(id, assetPath));
-        }
-
-        public void PlayStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
-        {
-            packetSender.Send(new PlayFMODStudioEmitter(id, assetPath, play, allowFadeout));
-        }
-
-        public Dictionary<string, SoundData> SoundDataList => assetWhitelist;
+    public void PlayEventInstance(NitroxId id, string assetPath, bool play, NitroxVector3 position, float volume)
+    {
+        packetSender.Send(new FMODEventInstancePacket(id, play, assetPath, position, volume));
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Autofac;
+using NitroxModel;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
@@ -55,6 +57,8 @@ namespace NitroxServer_Subnautica
             }).SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaMap>().As<IMap>().InstancePerLifetimeScope();
+
+            containerBuilder.Register(c => new FMODWhitelist(GameInfo.Subnautica.Name)).InstancePerLifetimeScope();
         }
     }
 }

@@ -19,10 +19,10 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(PlayerStats),
             typeof(VehicleColorChange),
             typeof(StoryEventSend),
-            typeof(PlayFMODAsset),
-            typeof(PlayFMODCustomEmitter),
-            typeof(PlayFMODCustomLoopingEmitter),
-            typeof(PlayFMODStudioEmitter),
+            typeof(FMODAssetPacket),
+            typeof(FMODCustomEmitterPacket),
+            typeof(FMODCustomLoopingEmitterPacket),
+            typeof(FMODStudioEmitterPacket),
             typeof(PlayerCinematicControllerCall)
         };
 
